@@ -1,28 +1,116 @@
-# Getting Started
+# API de Gerenciamento de Alunos e Turmas
 
-### Reference Documentation
-For further reference, please consider the following sections:
+### Sobre o projeto:
+Esta aplicação é uma API RESTful desenvolvida em Java utilizando o framework Spring Boot, com o objetivo de gerenciar alunos e suas associações com turmas. O projeto implementa operações de CRUD para os dois recursos e validações de regras de negócio específicas.
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.4.0/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.4.0/maven-plugin/build-image.html)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/3.4.0/reference/data/sql.html#data.sql.jpa-and-spring-data)
-* [Spring Boot DevTools](https://docs.spring.io/spring-boot/3.4.0/reference/using/devtools.html)
-* [Spring Web](https://docs.spring.io/spring-boot/3.4.0/reference/web/servlet.html)
+## Funcionalidades
+#### CRUD de Alunos:
+* Criar um aluno e associá-lo a uma ou mais turmas.
+* Atualizar informações de um aluno (nome, CPF, email e turmas associadas).
+* Consultar um aluno por ID.
+* Listar todos os alunos.
+* Excluir um aluno, garantindo que ele não esteja associado a nenhuma turma.
 
-### Guides
-The following guides illustrate how to use some features concretely:
+#### CRUD de Turmas:
+* Criar uma nova turma.
+* Atualizar informações de uma turma (número e ano letivo).
+* Consultar uma turma por ID.
+* Listar todas as turmas.
+* Excluir uma turma.
 
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
+#### Validações de Regras de Negócio:
+* Um aluno não pode se associar a mais de uma vez à mesma turma.
+* Uma turma pode ter no máximo 5 alunos.
+* Um aluno só pode ser excluído se não estiver associado a nenhuma turma.
+* Validação de CPF único para cada aluno.
 
-### Maven Parent overrides
+## Tecnologias Utilizadas
+* Java 21
+* Spring Boot
+* Spring Data JPA
+* Hibernate
+* MySQL
+* Lombok
+* ModelMapper
+* Swagger
+* Maven
+* BeanValidation
 
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+## Endpoints da API
+#### Alunos:
+| Método | Endpoint             | Descrição                    |
+|--------|-----------------------|-----------------------------|
+| POST   | `/api/alunos`      | Cadastra um novo aluno         |
+| GET    | `/api/alunos`      | Consulta todos os alunos       |
+| GET    | `/api/alunos/{id}` | Consulta um aluno por ID       |
+| PUT    | `/api/alunos/{id}` | Atualiza um aluno              |
+| DELETE | `/api/alunos/{id}` | Remove um aluno                |
 
+#### Turmas:
+| Método | Endpoint             | Descrição                    |
+|--------|-----------------------|-----------------------------|
+| POST   | `/api/turmas`      | Cadastra uma nova turma        |
+| GET    | `/api/turmas`      | Consulta todas as turmas       |
+| GET    | `/api/turmas/{id}` | Consulta uma turma por ID      |
+| PUT    | `/api/turmas/{id}` | Atualiza uma turma             |
+| DELETE | `/api/turmas/{id}` | Remove uma turma               |
+
+### Exemplos de requisição
+
+#### POST  `/api/alunos/`
+```json
+{
+    "nome": "string",
+    "cpf": "99948226438",
+    "email": "string",
+    "turmasIds": [
+        "e076e1d1-bf23-45e3-bd07-9a1f15282eaf"
+    ]
+}
+```
+
+#### GET  `/api/turmas/{id}` 
+```json
+{
+    "id": "e076e1d1-bf23-45e3-bd07-9a1f15282eaf",
+    "numero": "2001",
+    "anoLetivo": 2,
+    "alunos": [
+        {
+            "id": "578f4769-a33d-447e-9b28-6d537e4b02c7",
+            "nome": "João Silva",
+            "cpf": "47023812601",
+            "email": "joao.silva@email.com"
+        }
+    ]
+}
+```
+## Instalação e Configuração
+#### 1. Clone o repositório:
+```bash
+git clone https://github.com/samuelmsilva2v/webApiTurmas.git
+cd webApiTurmas
+```
+#### 2. Configure o banco de dados MySQL:
+* Crie um banco de dados chamado `bd_webturmasalunos`.
+* Atualize o arquivo `application.properties` com suas credenciais do MySQL:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/bd_webturmasalunos
+spring.datasource.username=seu_usuario
+spring.datasource.password=sua_senha
+```
+#### 3. Compile o projeto:
+```bash
+mvn clean install
+```
+#### 4. Execute a aplicação:
+```bash
+mvn spring-boot:run
+```
+#### 5. Acesse a documentação da API:
+* Acesse o Swagger em: http://localhost:8080/swagger-ui.html
+
+### Autor
+- Samuel Maciel da Silva
+  - [LinkedIn](https://www.linkedin.com/in/samuelmsilva2v/)
+  - [E-mail](mailto:samuelmsilva@outlook.com.br)
