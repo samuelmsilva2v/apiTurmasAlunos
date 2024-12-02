@@ -18,6 +18,8 @@ import com.example.demo.domain.models.dtos.TurmaRequestDto;
 import com.example.demo.domain.models.dtos.TurmaResponseDto;
 import com.example.demo.domain.services.interfaces.TurmaDomainService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/turmas")
 public class TurmaController {
@@ -26,12 +28,12 @@ public class TurmaController {
 	private TurmaDomainService turmaDomainService;
 	
 	@PostMapping
-	public TurmaResponseDto post(@RequestBody TurmaRequestDto request) {
+	public TurmaResponseDto post(@RequestBody @Valid TurmaRequestDto request) {
 		return turmaDomainService.cadastrarTurma(request);
 	}
 	
 	@PutMapping("{id}")
-	public TurmaDetailedResponseDto post(@PathVariable UUID id, @RequestBody TurmaRequestDto request) {
+	public TurmaDetailedResponseDto post(@PathVariable UUID id, @RequestBody @Valid TurmaRequestDto request) {
 		return turmaDomainService.atualizarTurma(id, request);
 	}
 	

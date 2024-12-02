@@ -18,6 +18,8 @@ import com.example.demo.domain.models.dtos.AlunoRequestDto;
 import com.example.demo.domain.models.dtos.AlunoResponseDto;
 import com.example.demo.domain.services.interfaces.AlunoDomainService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/alunos")
 public class AlunoController {
@@ -26,12 +28,12 @@ public class AlunoController {
 	private AlunoDomainService alunoDomainService;
 
 	@PostMapping
-	public AlunoResponseDto post(@RequestBody AlunoRequestDto request) {
+	public AlunoResponseDto post(@RequestBody @Valid AlunoRequestDto request) {
 		return alunoDomainService.cadastrarAluno(request);
 	}
 
 	@PutMapping("{id}")
-	public AlunoDetailedResponseDto post(@PathVariable UUID id, @RequestBody AlunoRequestDto request) {
+	public AlunoDetailedResponseDto post(@PathVariable UUID id, @RequestBody @Valid AlunoRequestDto request) {
 		return alunoDomainService.atualizarAluno(id, request);
 	}
 
