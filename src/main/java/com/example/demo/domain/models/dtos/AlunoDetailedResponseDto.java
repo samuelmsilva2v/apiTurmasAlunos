@@ -1,5 +1,6 @@
 package com.example.demo.domain.models.dtos;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,5 +13,5 @@ public class AlunoDetailedResponseDto {
 	private String nome;
 	private String cpf;
 	private String email;
-	private List<TurmaResponseDto> turmasIds;
+	private List<TurmaResponseDto> turmasIds = new ArrayList<>();
 }

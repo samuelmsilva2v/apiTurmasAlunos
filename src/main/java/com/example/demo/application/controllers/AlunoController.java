@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.models.dtos.AlunoDetailedResponseDto;
 import com.example.demo.domain.models.dtos.AlunoRequestDto;
+import com.example.demo.domain.models.dtos.AlunoResponseDto;
 import com.example.demo.domain.services.interfaces.AlunoDomainService;
 
 @RestController
@@ -25,7 +26,7 @@ public class AlunoController {
 	private AlunoDomainService alunoDomainService;
 
 	@PostMapping
-	public AlunoDetailedResponseDto post(@RequestBody AlunoRequestDto request) {
+	public AlunoResponseDto post(@RequestBody AlunoRequestDto request) {
 		return alunoDomainService.cadastrarAluno(request);
 	}
 
@@ -40,12 +41,12 @@ public class AlunoController {
 	}
 
 	@GetMapping("{id}")
-	public AlunoDetailedResponseDto getById(@PathVariable UUID id) {
+	public AlunoResponseDto getById(@PathVariable UUID id) {
 		return alunoDomainService.consultarAlunoPorId(id);
 	}
 
 	@GetMapping
-	public List<AlunoDetailedResponseDto> getAll() {
+	public List<AlunoResponseDto> getAll() {
 		return alunoDomainService.consultarAlunos();
 	}
 }

@@ -5,16 +5,17 @@ import java.util.UUID;
 
 import com.example.demo.domain.models.dtos.AlunoDetailedResponseDto;
 import com.example.demo.domain.models.dtos.AlunoRequestDto;
+import com.example.demo.domain.models.dtos.AlunoResponseDto;
 
 public interface AlunoDomainService {
 
-	AlunoDetailedResponseDto cadastrarAluno(AlunoRequestDto request);
+	AlunoResponseDto cadastrarAluno(AlunoRequestDto request);
 	
 	AlunoDetailedResponseDto atualizarAluno(UUID id, AlunoRequestDto request);
 	
 	String excluirAluno(UUID id);
 	
-	AlunoDetailedResponseDto consultarAlunoPorId(UUID id);
+	AlunoResponseDto consultarAlunoPorId(UUID id);
 	
-	List<AlunoDetailedResponseDto> consultarAlunos();
+	List<AlunoResponseDto> consultarAlunos();
 }
