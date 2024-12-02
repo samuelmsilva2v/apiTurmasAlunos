@@ -5,10 +5,11 @@ import java.util.UUID;
 
 import com.example.demo.domain.models.dtos.TurmaDetailedResponseDto;
 import com.example.demo.domain.models.dtos.TurmaRequestDto;
+import com.example.demo.domain.models.dtos.TurmaResponseDto;
 
 public interface TurmaDomainService {
 
-	TurmaDetailedResponseDto cadastrarTurma(TurmaRequestDto request);
+	TurmaResponseDto cadastrarTurma(TurmaRequestDto request);
 	
 	TurmaDetailedResponseDto atualizarTurma(UUID id, TurmaRequestDto request);
 	

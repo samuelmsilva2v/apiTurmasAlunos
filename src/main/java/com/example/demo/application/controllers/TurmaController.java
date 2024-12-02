@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.models.dtos.TurmaDetailedResponseDto;
 import com.example.demo.domain.models.dtos.TurmaRequestDto;
+import com.example.demo.domain.models.dtos.TurmaResponseDto;
 import com.example.demo.domain.services.interfaces.TurmaDomainService;
 
 @RestController
@@ -25,7 +26,7 @@ public class TurmaController {
 	private TurmaDomainService turmaDomainService;
 	
 	@PostMapping
-	public TurmaDetailedResponseDto post(@RequestBody TurmaRequestDto request) {
+	public TurmaResponseDto post(@RequestBody TurmaRequestDto request) {
 		return turmaDomainService.cadastrarTurma(request);
 	}
 	
