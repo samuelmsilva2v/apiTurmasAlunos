@@ -2,7 +2,9 @@ package com.example.demo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
@@ -61,6 +63,24 @@ class ApiTurmasAlunosApplicationTests {
 		assertEquals(response.getAnoLetivo(), request.getAnoLetivo());
 		
 		id = response.getId();
+	}
+	
+	@Test
+	@Order(2)
+	void consultarTurmaPorIdTest() throws Exception {
+		
+		var result = mockMvc.perform(get("/api/turmas/" + id)
+				.contentType("application/json"))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		var content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+		
+		var response = objectMapper.readValue(content, TurmaResponseDto.class);
+		
+		assertEquals(response.getId(), id);
+		assertNotNull(response.getNumero());
+		assertNotNull(response.getAnoLetivo());
 	}
 
 }
