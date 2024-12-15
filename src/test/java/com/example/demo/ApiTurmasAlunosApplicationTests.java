@@ -137,9 +137,26 @@ class ApiTurmasAlunosApplicationTests {
 
 		alunoId = response.getId();
 	}
-
+	
 	@Test
 	@Order(5)
+	void consultarAlunoPorIdTest() throws Exception {
+		
+		var result = mockMvc.perform(get("/api/alunos/" + alunoId).contentType("application/json"))
+				.andExpect(status().isOk()).andReturn();
+
+		var content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		var response = objectMapper.readValue(content, AlunoResponseDto.class);
+
+		assertEquals(response.getId(), alunoId);
+		assertNotNull(response.getNome());
+		assertNotNull(response.getEmail());
+		assertNotNull(response.getCpf());
+	}
+
+	@Test
+	@Order(6)
 	void atualizarAlunoTest() throws Exception {
 
 		var faker = new Faker(Locale.forLanguageTag("pt-BR"));
