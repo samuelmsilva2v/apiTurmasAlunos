@@ -35,6 +35,8 @@ Esta aplicação é uma API RESTful desenvolvida em Java utilizando o framework 
 * Swagger
 * Maven
 * BeanValidation
+* MockMVC
+* JUnit (para testes unitários)
 
 ## Endpoints da API
 #### Alunos:
@@ -99,13 +101,17 @@ spring.datasource.url=jdbc:mysql://localhost:3306/bd_webturmasalunos
 spring.datasource.username=seu_usuario
 spring.datasource.password=sua_senha
 ```
+#### 3. Execute os testes:
+```bash
+./mvnw test
+```
 #### 3. Compile o projeto:
 ```bash
-mvn clean install
+./mvnw clean install
 ```
 #### 4. Execute a aplicação:
 ```bash
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 #### 5. Acesse a documentação da API:
 * Acesse o Swagger em: http://localhost:8080/swagger-ui.html
