@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -20,6 +22,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.example.demo.domain.models.dtos.AlunoRequestDto;
+import com.example.demo.domain.models.dtos.AlunoResponseDto;
 import com.example.demo.domain.models.dtos.TurmaRequestDto;
 import com.example.demo.domain.models.dtos.TurmaResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +40,9 @@ class ApiTurmasAlunosApplicationTests {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	private static UUID id;
+	private static UUID turmaId;
+	
+	private static UUID alunoId;
 
 	@Test
 	@Order(1)
@@ -60,21 +66,21 @@ class ApiTurmasAlunosApplicationTests {
 		assertEquals(response.getNumero(), request.getNumero());
 		assertEquals(response.getAnoLetivo(), request.getAnoLetivo());
 
-		id = response.getId();
+		turmaId = response.getId();
 	}
 
 	@Test
 	@Order(2)
 	void consultarTurmaPorIdTest() throws Exception {
 
-		var result = mockMvc.perform(get("/api/turmas/" + id).contentType("application/json"))
+		var result = mockMvc.perform(get("/api/turmas/" + turmaId).contentType("application/json"))
 				.andExpect(status().isOk()).andReturn();
 
 		var content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
 		var response = objectMapper.readValue(content, TurmaResponseDto.class);
 
-		assertEquals(response.getId(), id);
+		assertEquals(response.getId(), turmaId);
 		assertNotNull(response.getNumero());
 		assertNotNull(response.getAnoLetivo());
 	}
@@ -89,16 +95,48 @@ class ApiTurmasAlunosApplicationTests {
 		request.setNumero(faker.number().digits(4));
 		request.setAnoLetivo(faker.number().randomDigit());
 
-		var result = mockMvc.perform(put("/api/turmas/" + id).contentType("application/json")
+		var result = mockMvc.perform(put("/api/turmas/" + turmaId).contentType("application/json")
 				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk()).andReturn();
 
 		var content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
 		var response = objectMapper.readValue(content, TurmaResponseDto.class);
 
-		assertEquals(response.getId(), id);
+		assertEquals(response.getId(), turmaId);
 		assertEquals(response.getNumero(), request.getNumero());
 		assertEquals(response.getAnoLetivo(), request.getAnoLetivo());
+	}
+	
+	@Test
+	@Order(4)
+	void cadastrarAlunoTest() throws Exception {
+		
+		var faker = new Faker(Locale.forLanguageTag("pt-BR"));
+		
+		var request = new AlunoRequestDto();
+		request.setNome(faker.name().fullName());
+		request.setCpf(faker.number().digits(11));
+		request.setEmail(faker.internet().emailAddress());
+		
+		List<UUID> turmasIds = new ArrayList<>();
+		turmasIds.add(turmaId); 
+		request.setTurmasIds(turmasIds);
+		
+		
+		var result = mockMvc.perform(
+				post("/api/alunos").contentType("application/json").content(objectMapper.writeValueAsString(request)))
+				.andExpect(status().isOk()).andReturn();
+		
+		var content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		var response = objectMapper.readValue(content, AlunoResponseDto.class);
+		
+		assertNotNull(response.getId());
+		assertEquals(response.getNome(), request.getNome());
+		assertEquals(response.getCpf(), request.getCpf());
+		assertEquals(response.getEmail(), request.getEmail());
+		
+		alunoId = response.getId();
 	}
 
 }
