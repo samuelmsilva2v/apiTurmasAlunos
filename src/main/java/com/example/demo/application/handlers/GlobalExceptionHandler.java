@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import jakarta.persistence.EntityNotFoundException;
 
-@ControllerAdvice
+@ControllerAdvice(basePackages = "com.example.demo.application.controllers")
 public class GlobalExceptionHandler {
 
     // Exceção genérica para argumentos inválidos

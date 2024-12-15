@@ -2,6 +2,8 @@ package com.example.demo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -137,11 +139,11 @@ class ApiTurmasAlunosApplicationTests {
 
 		alunoId = response.getId();
 	}
-	
+
 	@Test
 	@Order(5)
 	void consultarAlunoPorIdTest() throws Exception {
-		
+
 		var result = mockMvc.perform(get("/api/alunos/" + alunoId).contentType("application/json"))
 				.andExpect(status().isOk()).andReturn();
 
@@ -172,15 +174,50 @@ class ApiTurmasAlunosApplicationTests {
 
 		var result = mockMvc.perform(put("/api/alunos/" + alunoId).contentType("application/json")
 				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk()).andReturn();
-		
+
 		var content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
 		var response = objectMapper.readValue(content, AlunoResponseDto.class);
-		
+
 		assertEquals(response.getId(), alunoId);
 		assertEquals(response.getNome(), request.getNome());
 		assertEquals(response.getCpf(), request.getCpf());
 		assertEquals(response.getEmail(), request.getEmail());
+	}
+
+	@Test
+	@Order(7)
+	void excluirAlunoTest() throws Exception {
+
+		var faker = new Faker(Locale.forLanguageTag("pt-BR"));
+		var request = new AlunoRequestDto();
+		request.setNome(faker.name().fullName());
+		request.setCpf(faker.number().digits(11));
+		request.setEmail(faker.internet().emailAddress());
+
+		List<UUID> turmasIds = new ArrayList<>();
+		turmasIds.add(null);
+		request.setTurmasIds(turmasIds);
+
+		mockMvc.perform(put("/api/alunos/" + alunoId).contentType("application/json")
+				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk()).andReturn();
+
+		var result = mockMvc.perform(delete("/api/alunos/" + alunoId)).andExpect(status().isOk()).andReturn();
+
+		var content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		assertTrue(content.contains("Aluno excluído com sucesso!"));
+	}
+
+	@Test
+	@Order(8)
+	void excluirTurmaTest() throws Exception {
+
+		var result = mockMvc.perform(delete("/api/turmas/" + turmaId)).andExpect(status().isOk()).andReturn();
+
+		var content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		assertTrue(content.contains("Turma excluída com sucesso!"));
 	}
 
 }
