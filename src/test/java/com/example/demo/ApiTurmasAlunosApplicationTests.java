@@ -41,7 +41,7 @@ class ApiTurmasAlunosApplicationTests {
 	private ObjectMapper objectMapper;
 
 	private static UUID turmaId;
-	
+
 	private static UUID alunoId;
 
 	@Test
@@ -106,37 +106,64 @@ class ApiTurmasAlunosApplicationTests {
 		assertEquals(response.getNumero(), request.getNumero());
 		assertEquals(response.getAnoLetivo(), request.getAnoLetivo());
 	}
-	
+
 	@Test
 	@Order(4)
 	void cadastrarAlunoTest() throws Exception {
-		
+
 		var faker = new Faker(Locale.forLanguageTag("pt-BR"));
-		
+
 		var request = new AlunoRequestDto();
 		request.setNome(faker.name().fullName());
 		request.setCpf(faker.number().digits(11));
 		request.setEmail(faker.internet().emailAddress());
-		
+
 		List<UUID> turmasIds = new ArrayList<>();
-		turmasIds.add(turmaId); 
+		turmasIds.add(turmaId);
 		request.setTurmasIds(turmasIds);
-		
-		
+
 		var result = mockMvc.perform(
 				post("/api/alunos").contentType("application/json").content(objectMapper.writeValueAsString(request)))
 				.andExpect(status().isOk()).andReturn();
+
+		var content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		var response = objectMapper.readValue(content, AlunoResponseDto.class);
+
+		assertNotNull(response.getId());
+		assertEquals(response.getNome(), request.getNome());
+		assertEquals(response.getCpf(), request.getCpf());
+		assertEquals(response.getEmail(), request.getEmail());
+
+		alunoId = response.getId();
+	}
+
+	@Test
+	@Order(5)
+	void atualizarAlunoTest() throws Exception {
+
+		var faker = new Faker(Locale.forLanguageTag("pt-BR"));
+
+		var request = new AlunoRequestDto();
+		request.setNome(faker.name().fullName());
+		request.setCpf(faker.number().digits(11));
+		request.setEmail(faker.internet().emailAddress());
+
+		List<UUID> turmasIds = new ArrayList<>();
+		turmasIds.add(turmaId);
+		request.setTurmasIds(turmasIds);
+
+		var result = mockMvc.perform(put("/api/alunos/" + alunoId).contentType("application/json")
+				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk()).andReturn();
 		
 		var content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
 		var response = objectMapper.readValue(content, AlunoResponseDto.class);
 		
-		assertNotNull(response.getId());
+		assertEquals(response.getId(), alunoId);
 		assertEquals(response.getNome(), request.getNome());
 		assertEquals(response.getCpf(), request.getCpf());
 		assertEquals(response.getEmail(), request.getEmail());
-		
-		alunoId = response.getId();
 	}
 
 }
